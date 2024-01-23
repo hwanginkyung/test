@@ -5,13 +5,13 @@ pipeline {
         maven 'my_maven'
     }
     environment {
-        GITNAME = 'oolralra'            
-        GITEMAIL = 'oolralra@gmail.com' 
-        GITWEBADD = 'https://github.com/oolralra/sb_code.git'
-        GITSSHADD = 'git@github.com:oolralra/sb_code.git'
+        GITNAME = 'hwanginkyung'            
+        GITEMAIL = 'dlsrud0108@yonsei.ac.kr' 
+        GITWEBADD = 'https://github.com/hwanginkyung/test'
+        GITSSHADD = 'git@github.com:hwanginkyung/test.git'
         GITCREDENTIAL = 'git_cre'
         
-        DOCKERHUB = 'oolralra/spring'
+        DOCKERHUB = 'hinkyung/spring'
         DOCKERHUBCREDENTIAL = 'docker_cre'
     }
         
