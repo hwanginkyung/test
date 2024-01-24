@@ -9,9 +9,13 @@ pipeline {
         IMAGE_NAME = 'image-test'
     }
     stages {
+        stage('Clone repository') {
+         checkout scm
+     }
         stage('image build') {
             steps {
                 script {
+                    
                     sh "docker build -t ${DOCKERHUB}:${currentBuild.number} ."
                     sh "docker build -t ${DOCKERHUB}:latest ."
                 }
@@ -20,6 +24,8 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
+                    sh 'rm  ~/.dockercfg || true'
+                    sh 'rm ~/.docker/config.json || true'
                     // Docker Hub에 푸시
                     docker.withRegistry('https://index.docker.io/v1/', DOCKERHUBCREDENTIAL) {
                         def customImage = docker.build("${DOCKERHUB}:${currentBuild.number}")
