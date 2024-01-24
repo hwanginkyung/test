@@ -1,11 +1,22 @@
 pipeline {
     agent any
     environment {
+        DOCKERHUB = 'hinkyung/pythons'
+        DOCKERHUBCREDENTIAL = 'docker_cre'
+
         ECR_CREDENTIALS = credentials('test') // Jenkins Credential에서 설정한 ECR 액세스 키와 시크릿 키
         ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com'
         IMAGE_NAME = 'image-test'
     }
     stages {
+        stage('image build') {
+            steps {
+                sh "docker build -t ${DOCKERHUB}:${currentBuild.number} ."
+                sh "docker build -t ${DOCKERHUB}:latest ."
+                // currentBuild.number = 젠킨스가 제공하는 빌드넘버 변수
+                // oolralra/spring:1 같은 형태로 빌드가 될것
+            }
+        }
         stage('Build and Push Docker Image') {
             steps {
                 script {
