@@ -9,10 +9,6 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                     checkout scm
-                    // Docker 빌드 및 이미지 태깅
-                     sh 'rm  ~/.dockercfg || true'
-                     sh 'rm ~/.docker/config.json || true'
                      docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
                         def customImage = docker.build("env.ECR_REGISTRY/hik_test")
                         customImage.push("${env.BUILD_NUMBER}")
