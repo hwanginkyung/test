@@ -38,7 +38,7 @@ pipeline {
                     }
 
                     // ECR에 푸시
-                    docker.withRegistry('https://${ECR_REGISTRY}', 'ecr:us-east-1', credentialsId: ECR_CREDENTIALS) {
+                    docker.withRegistry('https://${ECR_REGISTRY}', 'ecr:us-east-1 : ECR_CREDENTIALS') {
                         def customImage = docker.build("${ECR_REGISTRY}/hik_test:${currentBuild.number}")
                         customImage.push()
                         customImage.push('latest')
