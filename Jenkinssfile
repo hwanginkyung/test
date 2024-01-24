@@ -17,7 +17,7 @@ pipeline {
                      sh 'rm  ~/.dockercfg || true'
                      sh 'rm ~/.docker/config.json || true'
                      docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
-                        def customImage = docker.build("env.ECR_REGISTRY/hik_test")
+                        def customImage = docker.build("env.ECR_REGISTRY/hik_test", "--no-cache")
                         customImage.push("${env.BUILD_NUMBER}")
                         customImage.push("latest")
                     }
