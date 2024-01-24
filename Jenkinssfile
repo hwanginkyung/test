@@ -27,6 +27,23 @@ pipeline {
                 }
             }
         }
+        stage('Docker Cleanup') {
+            steps {
+                script {
+                    // docker system prune
+                    sh 'docker system prune --force'
+
+                    // docker volume prune
+                    sh 'docker volume prune --force'
+
+                    // docker volume ls
+                    sh 'docker volume ls'
+
+                    // docker system df
+                    sh 'docker system df'
+                }
+            }
+
         stage('Build and Push Docker Image') {
             steps {
                 script {
