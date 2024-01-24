@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AKIA6DZINXPREYT6QBMH')
+        AWS_SECRET_ACCESS_KEY = credentials('bjXZdynFEyEa5HpJJs9wiEONxIkOqn1/TINpPslV')
+        AWS_REGION            = 'us-east-1'
+    }
+
+    stages {
+        stage('Example') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'AKIA6DZINXPREYT6QBMH', variable: 'AWS_ACCESS_KEY_ID'),
+                                     string(credentialsId: 'bjXZdynFEyEa5HpJJs9wiEONxIkOqn1/TINpPslV', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        // 여기에서 AWS 크리덴셜을 사용하여 작업 수행
+                        sh 'aws python main.py'  // 예시: AWS CLI 명령어를 실행
+                    }
+                }
+            }
+        }
+    }
+}
