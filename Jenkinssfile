@@ -20,7 +20,7 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                     docker.withRegistry('970210524130.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:test'){
+                     docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS){
                         def customImage = docker.build("env.ECR_REGISTRY/hik_test")
                         customImage.push("${env.BUILD_NUMBER}")
                         customImage.push("latest")
