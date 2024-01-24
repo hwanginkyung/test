@@ -7,14 +7,15 @@ pipeline {
         AWS_REGION            = 'us-east-1'
     }
 
+
     stages {
-        stage('Example') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'AKIA6DZINXPREYT6QBMH', variable: 'AWS_ACCESS_KEY_ID'),
-                                     string(credentialsId: 'bjXZdynFEyEa5HpJJs9wiEONxIkOqn1/TINpPslV', variable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        // 여기에서 AWS 크리덴셜을 사용하여 작업 수행
-                        sh 'aws python main.py'  // 예시: AWS CLI 명령어를 실행
+                    // Docker 빌드 및 이미지 태깅
+                    docker.withRegistry('https://${970210524130.dkr.ecr.us-east-1.amazonaws.com/hik_test}', 'ecr:us-east-1:${970210524130}') {
+                        def customImage = docker.build("${imageName}:${BUILD_NUMBER}")
+                        customImage.push()
                     }
                 }
             }
