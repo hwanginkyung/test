@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         ECR_CREDENTIALS = credentials('test') // Jenkins Credential에서 설정한 ECR 액세스 키와 시크릿 키
-        ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com/hik_test'
+        ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com'
         IMAGE_NAME = 'image-test'
     }
 
