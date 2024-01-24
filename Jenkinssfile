@@ -1,20 +1,37 @@
 pipeline {
     agent any
     environment {
+        DOCKERHUB = 'hinkyung/pythons'
+        DOCKERHUBCREDENTIAL = 'docker_cre'
+
         ECR_CREDENTIALS = credentials('test') // Jenkins Credential에서 설정한 ECR 액세스 키와 시크릿 키
         ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com'
         IMAGE_NAME = 'image-test'
-        // 기존에 사용된 환경 변수와 자격 증명을 그대로 유지
     }
     stages {
+        stage('image build') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKERHUB}:${currentBuild.number} ."
+                    sh "docker build -t ${DOCKERHUB}:latest ."
+                }
+            }
+        }
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
-                        def customImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                    // Docker Hub에 푸시
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUBCREDENTIAL) {
+                        def customImage = docker.build("${DOCKERHUB}:${currentBuild.number}")
                         customImage.push()
-                        // latest 태그로도 푸시하려면 아래 줄 주석 해제
-                        // customImage.push('latest')
+                        customImage.push('latest')
+                    }
+
+                    // ECR에 푸시
+                    docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
+                        def customImage = docker.build("${IMAGE_NAME}:${currentBuild.number}")
+                        customImage.push()
+                        customImage.push('latest')
                     }
                 }
             }
