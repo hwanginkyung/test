@@ -2,19 +2,19 @@ pipeline {
     agent any
     environment {
         ECR_CREDENTIALS = credentials('test') // Jenkins Credential에서 설정한 ECR 액세스 키와 시크릿 키
-        ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com/hik_test'
+        ECR_REGISTRY = '970210524130.dkr.ecr.us-east-1.amazonaws.com'
         IMAGE_NAME = 'image-test'
     }
     stages {
         stage('Build and Push Docker Image') {
             steps {
                 script {
+                     checkout scm
                     // Docker 빌드 및 이미지 태깅
                      sh 'rm  ~/.dockercfg || true'
                      sh 'rm ~/.docker/config.json || true'
                      docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
-                        def customImage = docker.build("${imageName}:${BUILD_NUMBER}")
-                        customImage.push()
+                        def customImage = docker.build("env.ECR_REGISTRY/hik_test")
                         customImage.push("${env.BUILD_NUMBER}")
                         customImage.push("latest")
                     }
