@@ -9,6 +9,24 @@ pipeline {
 
 
     stages {
+        stage('Check Disk Space') {
+            steps {
+                script {
+                    def freeSpace = sh(script: 'df -h /', returnStatus: true).trim()
+                    echo "Free disk space:\n${freeSpace}"
+
+                    // 여유 공간이 어느 정도 이하일 때 특정 작업 수행
+                    if (freeSpace.contains('100MB')) {
+                        // 디스크 여유 공간이 부족할 때 수행할 작업 추가
+                        echo "Disk space is below the threshold. Taking necessary actions..."
+                        sh "sudo rm -f /var/log/*.log"
+                        // 여기에 필요한 작업 추가
+                    } else {
+                        echo "Disk space is sufficient."
+                    }
+                }
+            }
+        }
         stage('Build and Push Docker Image') {
             steps {
                 script {
