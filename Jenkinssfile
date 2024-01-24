@@ -13,9 +13,12 @@ pipeline {
             steps {
                 script {
                     // Docker 빌드 및 이미지 태깅
+                     sh 'rm  ~/.dockercfg || true'
+                     sh 'rm ~/.docker/config.json || true'
                      docker.withRegistry(env.ECR_REGISTRY, 'ecr:us-east-1', credentialsId: env.ECR_CREDENTIALS) {
-                        def customImage = docker.build("${imageName}:${BUILD_NUMBER}")
-                        customImage.push()
+                        def customImage = docker.build("env.ECR_REGISTRY")
+                        customImage.push("${env.BUILD_NUMBER}")
+                        customImage.push("latest")
                     }
                 }
             }
